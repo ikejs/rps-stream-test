@@ -1,0 +1,116 @@
+<div class="col-md-12 row m-0 p-1 grey mb-4">
+  <div class="col-md-6 m-0 float-left">
+    <img src="logo.png" class="img-fluid logo float-right" alt="Radio Plus" />
+  </div>
+  <div class="col-md-6 m-0 float-right p-0">
+    <h2>Video Streaming</h2>
+    <p class="lead m-0">Test</p>
+  </div>
+</div>
+
+
+<div class="m-4 row">
+  <div id="progressSidebar" class="hidden rounded bg-white col-md-3 p-4 float-left">
+    <h3>Results</h3>
+    <hr>
+    <p class="lead"><strong>1. Record upload speed</strong></p>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="upload-speed"><i class="fa fa-arrow-up"></i></span>
+      </div>
+      <input type="number" class="form-control" placeholder="Type upload speed here" aria-label="Upload Speed" aria-describedby="upload-speed">
+    </div>
+    <button onclick="fetchYt()" class="btn btn-sm btn-success btn-block" type="button">Save &amp; continue</button>
+  </div>
+  <div class="col-md-4 offset-md-4 rounded bg-white float-right">
+    {{!-- Start test button --}}
+    <div id="startButtonWrap" class="text-center p-4">
+      <p>Make sure this computer is connected via Ethernet, <strong>not WiFi</strong>. Disable WiFi before beginning test.</p>
+      <button onclick="startTest()" class="btn btn-success">Start Test</button>
+    </div>
+    {{!-- Speed test --}}
+    <div class="hidden speedTestWrap">
+      <h3 class="p-4">1. Record upload speed</h3>
+      <hr>
+      <div style="min-height:360px;">
+        <div style="width:100%;height:0;padding-bottom:50%;position:relative;">
+          <iframe id="speedTest" class="speedtest" id="speedTestIframe" src="//openspeedtest.com/Get-widget.php"></iframe>
+        </div>
+      </div>
+      <hr>
+      <h4>Click the Start button to begin the speed test.</h4>
+      <p class="lead">Afterwards, type the <strong>Upload Speed</strong> result in the results window.</p>
+    </div>
+    {{!-- YouTube fetch statuses --}}
+    <div id="ytFetchWrap" class="hidden">
+      <h3 class="p-4">2. Checking server availability...</h3>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Status</th>
+            <th scope="col">URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" id="ytHomeStatus"></th>
+            <td id="ytHomeInfo">Checking YouTube homepage.</td>
+          </tr>
+          <tr>
+            <th scope="row" id="ytAuthStatus"></th>
+            <td id="ytAuthInfo">Authenticating with YouTube...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  const startTest = () => {
+    // hide button, show speed test and results divs
+    $("#startButtonWrap").hide();
+    $(".speedTestWrap").show();
+    $("#progressSidebar").show();
+    $(".col-md-4").removeClass("col-md-4 offset-md-4").addClass("col-md-8 offset-md-1 rounded bg-white float-right");
+  };
+
+  const fetchYt = () => {
+    // hide speed test frame, show fetch statuses
+    $(".speedTestWrap").hide();
+    $("#ytFetchWrap").show();
+    // fetch random YT video to check availability
+    $("#ytHomeStatus").html('<p class="text-info">🔄</p>');
+    fetch(`https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=4Y4YSpF6d6w&key={{ytkey}}`)
+    .then((videoResponse) => {
+      if (videoResponse.status == 200) {
+        $("#ytHomeStatus").html('<p class="text-success">✅</p>');
+        $("#ytHomeInfo").html(`<p class="text-success"><strong>Response ${videoResponse.status}</strong>: YouTube is available!</p>`);
+      }
+    }).catch(err => {
+      $("#ytHomeStatus").html('<p class="text-danger">🆇</p>');
+      $("#ytHomeInfo").html(`<p class="text-success"><strong>Response ${videoResponse.status}</strong>: YouTube is NOT available.</p>`);
+    // check YT auth api
+    }).then(() => {
+      $("#ytAuthStatus").html('<p class="text-info">🔄</p>');
+
+
+
+
+      // use yt api to create a test event, and simulate a 720p stream, and get results
+
+
+      // if it worked, 
+
+          // $("#ytStudioStatus").html('<p class="text-success">✅</p>');
+          //  $("#ytStudioInfo").html(`<p class="text-success"><strong>Response ${authResponse.status}</strong>: YouTube authentication server is available!</p>`);
+
+      // if it didn't, 
+
+          //  $("#ytStudioStatus").html('<p class="text-danger">🆇</p>');
+          //  $("#ytStudioInfo").html(`<p class="text-success"><strong>Response ${authResponse.status}</strong>: YouTube authentication server is NOT available.</p>`);
+
+      
+    })
+  }
+</script>
